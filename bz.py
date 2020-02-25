@@ -46,8 +46,8 @@ plane.data.materials.append(mat)
 labels = ["sc", "fcc", "bcc","hex","rhom","st","bct","so","baseco","bco","fco","sm","basecm","tric"]
 i = 0
 for label in labels:
-    bz_loc = '/home/john/msg/julia/objs/%s.obj' %(label)
-    ibz_loc = '/home/john/msg/julia/objs/%s_r.obj' %(label)
+    bz_loc = '/home/john/3D/blender/objs/%s.obj' %(label)
+    ibz_loc = '/home/john/3D/blender/objs/%s_r.obj' %(label)
     bz_object = bpy.ops.import_scene.obj(filepath=bz_loc)
     bz_object = bpy.context.selected_objects[0] ####<--Fix
     print('Imported name: ', bz_object.name)
