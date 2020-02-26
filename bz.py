@@ -11,8 +11,15 @@ def look_at(obj_camera, point):
 
     # assume we're using euler rotation
     obj_camera.rotation_euler = rot_quat.to_euler()
+#keyframe ;linear
 
+#keyInterp = bpy.context.user_preferences.edit.keyframe_new_interpolation_type
+area = bpy.context.area.type
+bpy.context.area.type = 'USER_PREFRENCES'
+bpy.context.user_preferences.edit.keyframe_new_interpolation_type ='LINEAR'
+bpy.context.area.type = area
 
+labels = ["sc", "fcc", "bcc","hex","rhom","st","bct","so","baseco","bco","fco","sm","basecm","tric"]
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False, confirm=False)
 
@@ -20,12 +27,12 @@ bpy.ops.object.delete(use_global=False, confirm=False)
 obj_camera = bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(5,5, 3), rotation=(1.26227, 0.0211747, -0.423152))
 obj_camera = bpy.context.selected_objects[0] ####<--Fix
 
-look_at(obj_camera, Vector((0.0,0.0,0.0)))
+look_at(obj_camera, mathutils.Vector((0.0,0.0,0.0)))
 
 sun = bpy.ops.object.light_add(type='SUN', location=(-2, 6, 5))
 sun = bpy.context.selected_objects[0] ####<--Fix
 sun.data.energy = 3
-look_at(sun, Vector((0.0,0.0,0.0)))
+look_at(sun, mathutils.Vector((0.0,0.0,0.0)))
 #setup scene
 time = 3*24
 scene = bpy.data.scenes["Scene"]
@@ -43,9 +50,9 @@ mat.diffuse_color = (1,1,1, 1)
 
 plane.data.materials.append(mat)
 
-labels = ["sc", "fcc", "bcc","hex","rhom","st","bct","so","baseco","bco","fco","sm","basecm","tric"]
+
 i = 0
-for label in labels:
+for label in labels[0:3]:
     bz_loc = '/home/john/3D/blender/objs/%s.obj' %(label)
     ibz_loc = '/home/john/3D/blender/objs/%s_r.obj' %(label)
     bz_object = bpy.ops.import_scene.obj(filepath=bz_loc)
@@ -85,13 +92,16 @@ for label in labels:
     ibz_object.keyframe_insert(data_path="hide_render", frame=i*time+time)
 
     ibz_object.rotation_euler = (0, 0, 0)
-    ibz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time)
+    kf = ibz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time)
+    #kf.interpolation= 'LINEAR'
     bz_object.rotation_euler = (0, 0, 0)
-    bz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time)
+    kf = bz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time)
+    #kf.interpolation= 'LINEAR'
 
     ibz_object.rotation_euler = (0, 0, math.radians(180))
-    ibz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time + time+1)
-
+    kf = ibz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time + time+1)
+    #kf.interpolation= 'LINEAR'
     bz_object.rotation_euler = (0, 0, math.radians(180))
-    bz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time + time + 1)
+    kf = bz_object.keyframe_insert('rotation_euler', index=2 ,frame=i*time + time + 1)
+    #kf.interpolation= 'LINEAR'
     i+=1
